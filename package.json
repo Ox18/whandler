@@ -1,12 +1,37 @@
 {
   "name": "whandler",
-  "version": "1.0.5",
+  "version": "1.0.8",
   "description": "",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "npx babel src --out-dir dist",
+    "start": "npx babel src --watch --out-dir dist",
+    "deploy": "npm publish"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC"
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Ox18/whandler.git"
+  },
+  "keywords": [
+    "whandler",
+    "ws",
+    "websocket",
+    "npm",
+    "package",
+    "node",
+    "module",
+    "template",
+    "boilerplate",
+    "babel"
+  ],
+  "author": "Wilmer Delgado",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Ox18/whandler/issues"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.21.0",
+    "@babel/core": "^7.21.4",
+    "@babel/preset-env": "^7.21.4"
+  }
 }

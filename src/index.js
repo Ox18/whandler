@@ -1,15 +1,13 @@
-// get location file
 const path = require('path');
 
-class WhandlerClass {
+class WhandlerFiles {
     root = "";
     locationConfig = "";
     configuration = "";
     locationHandlers = "";
     handlers = [];
 
-    constructor(socket) {
-        this.socket = socket;
+    constructor() {
         this.init();
     }
 
@@ -47,7 +45,7 @@ class WhandlerClass {
 
         const fs = require('fs');
 
-        fs.readdir(dir, (err, files) => {
+        fs.readdir(dir, (_err, files) => {
             files.forEach(file => {
                 const handler = require(path.join(dir, file));
                 this.handlers.push(handler);
@@ -55,13 +53,26 @@ class WhandlerClass {
         });
     }
 
-    intializeOnMessage() {
+    getHandler(opcode) {
+        const handler = this.handlers.find(handler => handler.opcodes.includes(opcode));
 
+        if (handler) {
+            throw new Error("Handler << " + opcode + " >> not found");
+        }
+
+        return handler;
     }
 }
 
-function Whandler(socket) {
-    return new WhandlerClass(socket);
-}
+class Whandler {
+    constructor() {
+        this.files = new WhandlerFiles();
+    }
 
+    handle(opcode, data) {
+        const handler = this.files.getHandler(opcode);
+        handler.handle(data);
+    }
+}
+    
 module.exports = Whandler;
