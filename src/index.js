@@ -1,5 +1,9 @@
 const path = require('path');
 
+function logger(message){
+    console.log(`[WHANDLER] ${message}`);
+}
+
 class WhandlerFiles {
     root = "";
     locationConfig = "";
@@ -57,7 +61,8 @@ class WhandlerFiles {
         const handler = this.handlers.find(handler => handler.opcodes.includes(opcode));
 
         if (!handler) {
-            throw new Error("Handler << " + opcode + " >> not found");
+            logger(`Handler not found for opcode <<${opcode}>>`);
+            return;
         }
 
         return handler;
