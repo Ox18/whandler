@@ -13,7 +13,6 @@ class WhandlerFiles {
 
     init() {
         this.loadDirs();
-        this.intializeOnMessage();
         this.loadHandlers();
     }
 
@@ -25,7 +24,7 @@ class WhandlerFiles {
     }
 
     getRootDirectory() {
-        return path.join(__dirname, "../../");
+        return path.join(__dirname, "../../../");
     }
 
     getRootConfig() {
@@ -37,7 +36,7 @@ class WhandlerFiles {
     }
 
     getLocationHandlers() {
-        return path.join(this.locationConfig, this.configuration["source"]);
+        return path.join(this.locationConfig, "../", this.configuration["source"]);
     }
 
     loadHandlers() {
@@ -46,8 +45,9 @@ class WhandlerFiles {
         const fs = require('fs');
 
         fs.readdir(dir, (_err, files) => {
-            files.forEach(file => {
-                const handler = require(path.join(dir, file));
+            files?.forEach(file => {
+                const routeFile = path.join(dir, file);
+                const handler = require(routeFile);
                 this.handlers.push(handler);
             });
         });
@@ -56,7 +56,7 @@ class WhandlerFiles {
     getHandler(opcode) {
         const handler = this.handlers.find(handler => handler.opcodes.includes(opcode));
 
-        if (handler) {
+        if (!handler) {
             throw new Error("Handler << " + opcode + " >> not found");
         }
 
@@ -64,15 +64,13 @@ class WhandlerFiles {
     }
 }
 
-class Whandler {
-    constructor() {
-        this.files = new WhandlerFiles();
-    }
+module.exports = function () {
+    const files = new WhandlerFiles();
 
-    handle(opcode, data) {
-        const handler = this.files.getHandler(opcode);
-        handler.handle(data);
+    return {
+        handle: function (opcode, data) {
+            const handler = files.getHandler(opcode);
+            handler.handler(data);
+        }
     }
 }
-    
-module.exports = Whandler;
